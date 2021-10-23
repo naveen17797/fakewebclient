@@ -9,6 +9,7 @@ import reactor.core.publisher.Mono;
 import java.net.URI;
 import java.nio.charset.Charset;
 import java.time.ZonedDateTime;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Consumer;
@@ -34,8 +35,10 @@ public class FakeRequestHeadersUriSpec implements WebClient.RequestHeadersUriSpe
     private String uriString;
     private Function uriFunction;
     private Map uriVariablesMap;
+    private Map<String, String> cookies = new HashMap<>();
 
-
+    private Map<String, String[]> headers = new HashMap<>();
+    private Map<String, Object> attributes = new HashMap<>();
     @Override
     public WebClient.RequestHeadersSpec accept(MediaType... acceptableMediaTypes) {
         this.acceptableMediaTypes = acceptableMediaTypes;
@@ -50,7 +53,8 @@ public class FakeRequestHeadersUriSpec implements WebClient.RequestHeadersUriSpe
 
     @Override
     public WebClient.RequestHeadersSpec cookie(String name, String value) {
-        return null;
+        cookies.put(name, value);
+        return this;
     }
 
     @Override
@@ -67,12 +71,14 @@ public class FakeRequestHeadersUriSpec implements WebClient.RequestHeadersUriSpe
 
     @Override
     public WebClient.RequestHeadersSpec header(String headerName, String... headerValues) {
-        return null;
+        headers.put(headerName, headerValues);
+        return this;
     }
 
     @Override
     public WebClient.RequestHeadersSpec attribute(String name, Object value) {
-        return null;
+        this.attributes.put(name, value);
+        return this;
     }
 
     @Override

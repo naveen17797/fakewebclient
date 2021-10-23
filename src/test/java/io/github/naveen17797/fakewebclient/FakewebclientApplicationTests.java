@@ -7,7 +7,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 class FakewebclientApplicationTests {
 
     @Test
-    void contextLoads() {
+    void testShouldBeAbleToUseFakeWebClientForAssertions() {
     }
 
 }

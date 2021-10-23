@@ -11,6 +11,7 @@ import org.springframework.web.reactive.function.client.ExchangeStrategies;
 import org.springframework.web.reactive.function.client.WebClient;
 import org.springframework.web.util.UriBuilderFactory;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Consumer;
@@ -20,7 +21,9 @@ public class FakeWebClientBuilder implements WebClient.Builder {
     private String baseUrl;
     private Map<String, ?> defaultUriVariables;
     private UriBuilderFactory uriBuilderFactory;
-    private MultiValueMap<String, String> defaultHeader;
+
+    private Map<String, String[]> defaultHeaders = new HashMap<>();
+
     private Consumer<HttpHeaders> headersConsumer;
     private Consumer<MultiValueMap<String, String>> cookiesConsumer;
     private Consumer<WebClient.RequestHeadersSpec<?>> defaultRequest;
@@ -32,6 +35,7 @@ public class FakeWebClientBuilder implements WebClient.Builder {
     private Consumer<ExchangeStrategies.Builder> exchangeStrategiesConfigurer;
     private ExchangeFunction exchangeFunction;
     private Consumer<WebClient.Builder> builderConsumer;
+    private Map<String, String[]> defaultCookies = new HashMap<>();
 
     @Override
     public WebClient.Builder baseUrl(String baseUrl) {
@@ -53,7 +57,8 @@ public class FakeWebClientBuilder implements WebClient.Builder {
 
     @Override
     public WebClient.Builder defaultHeader(String header, String... values) {
-        return null;
+        this.defaultHeaders.put(header, values);
+        return this;
     }
 
     @Override
@@ -64,7 +69,8 @@ public class FakeWebClientBuilder implements WebClient.Builder {
 
     @Override
     public WebClient.Builder defaultCookie(String cookie, String... values) {
-        return null;
+        this.defaultCookies.put(cookie, values);
+        return this;
     }
 
     @Override
