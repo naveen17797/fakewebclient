@@ -1,5 +1,5 @@
 # fakewebclient
-Fake web client for spring
+Fake web client for spring unit tests
 
 ```
 
