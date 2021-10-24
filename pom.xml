@@ -9,7 +9,7 @@
     </parent>
     <groupId>io.github.naveen17797</groupId>
     <artifactId>fakewebclient</artifactId>
-    <version>0.0.11</version>
+    <version>0.0.12-SNAPSHOT</version>
     <name>fakewebclient</name>
     <description>fakewebclient to use in tests instead of webclient</description>
 
@@ -28,7 +28,7 @@
     <scm>
         <url>https://github.com/naveen17797/fakewebclient</url>
         <connection>scm:git:https://github.com/naveen17797/fakewebclient.git</connection>
-        <tag>fakewebclient-0.0.11</tag>
+        <tag>fakewebclient-0.0.10</tag>
     </scm>
 
     <licenses>
