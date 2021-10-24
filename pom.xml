@@ -100,7 +100,7 @@
                         <executions>
                             <execution>
                                 <id>sign-artifacts</id>
-                                <phase>release:prepare</phase>
+                                <phase>prepare</phase>
                                 <goals>
                                     <goal>sign</goal>
                                 </goals>
