@@ -9,7 +9,7 @@
     </parent>
     <groupId>io.github.naveen17797</groupId>
     <artifactId>fakewebclient</artifactId>
-    <version>0.0.11-SNAPSHOT</version>
+    <version>0.0.10-SNAPSHOT</version>
     <name>fakewebclient</name>
     <description>fakewebclient to use in tests instead of webclient</description>
 
@@ -102,7 +102,7 @@
                                 <id>sign-artifacts</id>
                                 <phase>verify</phase>
                                 <goals>
-                                    <goal>jar</goal>
+                                    <goal>sign</goal>
                                 </goals>
                             </execution>
                         </executions>
