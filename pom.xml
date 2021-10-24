@@ -10,9 +10,24 @@
     </parent>
     <groupId>io.github.naveen17797</groupId>
     <artifactId>fakewebclient</artifactId>
-    <version>0.0.1-SNAPSHOT</version>
+    <version>0.0.1</version>
     <name>fakewebclient</name>
-    <description>fakewebclient</description>
+    <description>fakewebclient to use in tests instead of webclient</description>
+
+    <scm>
+        <connection>scm:git:git://github.com/naveen17797/fakewebclient.git</connection>
+        <developerConnection>scm:git:ssh://github.com/naveen17797/fakewebclient.git</developerConnection>
+        <url>http://github.com/naveen17797/fakewebclient/tree/master</url>
+    </scm>
+
+    <licenses>
+        <license>
+            <name>Apache License, Version 2.0</name>
+            <url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
+            <distribution>repo</distribution>
+        </license>
+    </licenses>
+
     <properties>
         <java.version>11</java.version>
     </properties>
@@ -24,11 +39,6 @@
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-test</artifactId>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>io.projectreactor</groupId>
-            <artifactId>reactor-test</artifactId>
             <scope>test</scope>
         </dependency>
     </dependencies>

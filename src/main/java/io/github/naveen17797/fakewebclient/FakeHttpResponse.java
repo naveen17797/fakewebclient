@@ -1,15 +1,13 @@
 package io.github.naveen17797.fakewebclient;
 
-import org.springframework.core.io.buffer.*;
+import org.springframework.core.io.buffer.DataBuffer;
+import org.springframework.core.io.buffer.DefaultDataBufferFactory;
 import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseCookie;
 import org.springframework.http.client.reactive.ClientHttpResponse;
 import org.springframework.util.MultiValueMap;
 import reactor.core.publisher.Flux;
-
-import java.net.URI;
 
 public class FakeHttpResponse implements ClientHttpResponse {
 

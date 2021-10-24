@@ -31,7 +31,7 @@ public class FakeHttpConnector implements ClientHttpConnector {
     @Override
     public Mono<ClientHttpResponse> connect(HttpMethod method, URI uri, Function<? super ClientHttpRequest, Mono<Void>> requestCallback) {
         List<FakeRequestResponse> filteredResponses = this.requestResponseList.stream()
-                .filter(it -> it.getRequestMethod() == method && it.getUrl() == uri)
+                .filter(it -> it.getRequestMethod() == method && it.getUrl().toString() == uri.toString())
                 .collect(Collectors.toList());
         if (filteredResponses.isEmpty()) {
             return Mono.just(new FakeHttpResponse());

@@ -1,6 +1,5 @@
 package io.github.naveen17797.fakewebclient;
 
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -34,7 +33,8 @@ class FakewebclientApplicationTests {
                         .build();
 
 
-        assertEquals("test", client.method(HttpMethod.GET).uri(URI.create("https://google.com")).exchange().block().bodyToMono(String.class).block());
+        assertEquals("test", client.method(HttpMethod.GET).uri(URI.create("https://google.com")).exchange().block()
+                .bodyToMono(String.class).block());
 
 
     }
