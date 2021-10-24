@@ -102,7 +102,7 @@
                                 <id>sign-artifacts</id>
                                 <phase>verify</phase>
                                 <goals>
-                                    <goal>release:prepare</goal>
+                                    <goal>prepare</goal>
                                 </goals>
                             </execution>
                         </executions>
