@@ -23,7 +23,7 @@ public class FakeHttpConnector implements ClientHttpConnector {
     private final List<FakeRequestResponse> requestResponseList;
 
 
-    FakeHttpConnector(List<FakeRequestResponse> requestResponseList) {
+    public FakeHttpConnector(List<FakeRequestResponse> requestResponseList) {
         this.requestResponseList = requestResponseList;
     }
 

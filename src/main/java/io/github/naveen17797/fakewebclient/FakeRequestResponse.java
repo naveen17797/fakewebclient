@@ -43,7 +43,7 @@ public class FakeRequestResponse {
     }
 
 
-    FakeRequestResponse(URI url,
+    public FakeRequestResponse(URI url,
                         HttpMethod requestMethod,
                         String response, HttpStatus httpStatus, Map<String, List<String>> requestHeaders, Map<String, List<String>> responseHeaders) {
         this.url = url;

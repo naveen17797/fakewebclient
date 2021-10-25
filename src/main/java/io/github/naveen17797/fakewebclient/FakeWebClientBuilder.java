@@ -19,12 +19,12 @@ public class FakeWebClientBuilder {
     }
 
 
-    static FakeWebClientBuilder useDefaultWebClientBuilder() {
+    public static FakeWebClientBuilder useDefaultWebClientBuilder() {
         return new FakeWebClientBuilder(WebClient.builder());
     }
 
 
-    WebClient build() {
+    public WebClient build() {
         return this.builder
                 .clientConnector(
                         new FakeHttpConnector(requestResponsesList)

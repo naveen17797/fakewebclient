@@ -24,29 +24,29 @@ public class FakeRequestResponseBuilder {
     private Map<String, List<String>> responseHeaders = new HashMap<>();
 
 
-    FakeRequestResponseBuilder forUrl(String url) {
+    public FakeRequestResponseBuilder forUrl(String url) {
         this.url = URI.create(url);
         return this;
     }
 
-    FakeRequestResponseBuilder withRequestMethod(HttpMethod method) {
+    public FakeRequestResponseBuilder withRequestMethod(HttpMethod method) {
         this.requestMethod = method;
         return this;
     }
 
-    FakeRequestResponseBuilder replyWithResponse(String response) {
+    public FakeRequestResponseBuilder replyWithResponse(String response) {
         this.response = response;
         return this;
     }
 
-    FakeRequestResponseBuilder replyWithResponseStatusCode(int statusCode) {
+    public FakeRequestResponseBuilder replyWithResponseStatusCode(int statusCode) {
 
         this.statusCode = HttpStatus.resolve(statusCode);
         return this;
     }
 
 
-    FakeRequestResponse build() {
+    public FakeRequestResponse build() {
         return new FakeRequestResponse(url, requestMethod, response, statusCode, requestHeaders, responseHeaders);
     }
 
