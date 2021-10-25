@@ -108,4 +108,34 @@ class FakewebclientApplicationTests {
         });
     }
 
+
+    @Test
+    void testShouldBeAbleToMockResponseHeader() {
+
+        FakeRequestResponse fakeRequestResponse = new FakeRequestResponseBuilder()
+                .forUrl("https://google.com")
+                .withRequestMethod(HttpMethod.GET)
+                .replyWithResponse("test")
+                .replyWithResponseStatusCode(200)
+                .withResponseHeader("foo", "bar")
+                .build();
+
+        WebClient client =
+                FakeWebClientBuilder.useDefaultWebClientBuilder()
+                        .addRequestResponse(fakeRequestResponse)
+                        .build();
+
+
+        assertEquals("bar",
+
+                client
+                        .method(HttpMethod.GET)
+                        .uri(URI.create("https://google.com"))
+                        .exchange()
+                        .block()
+                        .headers()
+                        .header("foo")
+                        .get(0));
+    }
+
 }

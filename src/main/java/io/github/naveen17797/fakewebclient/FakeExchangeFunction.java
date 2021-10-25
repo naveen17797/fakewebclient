@@ -27,7 +27,7 @@ public class FakeExchangeFunction implements ExchangeFunction {
 
                 Objects.equals(item.getUrl(), request.url()) &&
                         item.getRequestMethod() == request.method() &&
-                        headerCompare( item.getHeaders(), request.headers() )
+                        headerCompare( item.getRequestHeaders(), request.headers() )
 
         ).collect(Collectors.toList());
 
@@ -38,8 +38,16 @@ public class FakeExchangeFunction implements ExchangeFunction {
 
         FakeRequestResponse match = filteredItems.get(0);
 
+
+
+
         return Mono.just(ClientResponse.create(match.getHttpStatus())
                 .body(match.getResponse())
+                        .headers((responseHeaders) -> {
+                            for (Map.Entry<String, List<String>> entry: match.getResponseHeaders().entrySet()) {
+                                responseHeaders.addAll(entry.getKey(), entry.getValue());
+                            }
+                        })
                 .build());
     }
 

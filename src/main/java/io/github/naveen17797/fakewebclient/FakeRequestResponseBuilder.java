@@ -19,7 +19,9 @@ public class FakeRequestResponseBuilder {
 
     private HttpStatus statusCode;
 
-    private Map<String, List<String>> headers = new HashMap<>();
+    private Map<String, List<String>> requestHeaders = new HashMap<>();
+
+    private Map<String, List<String>> responseHeaders = new HashMap<>();
 
 
     FakeRequestResponseBuilder forUrl(String url) {
@@ -45,13 +47,20 @@ public class FakeRequestResponseBuilder {
 
 
     FakeRequestResponse build() {
-        return new FakeRequestResponse(url, requestMethod, response, statusCode, headers);
+        return new FakeRequestResponse(url, requestMethod, response, statusCode, requestHeaders, responseHeaders);
     }
 
     public FakeRequestResponseBuilder withRequestHeader(String key, String value) {
         ArrayList<String> mutableList = new ArrayList<>();
         mutableList.add(value);
-        headers.put(key, mutableList);
+        requestHeaders.put(key, mutableList);
+        return this;
+    }
+
+    public FakeRequestResponseBuilder withResponseHeader(String key, String value) {
+        ArrayList<String> mutableList = new ArrayList<>();
+        mutableList.add(value);
+        responseHeaders.put(key, mutableList);
         return this;
     }
 }

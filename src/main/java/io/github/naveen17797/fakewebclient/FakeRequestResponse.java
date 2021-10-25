@@ -9,9 +9,12 @@ import java.util.Map;
 
 public class FakeRequestResponse {
 
+    private URI url;
+    private HttpMethod requestMethod;
+    private String response;
     private final HttpStatus httpStatus;
-
-    private final Map<String, List<String>> headers;
+    private final Map<String, List<String>> requestHeaders;
+    private final Map<String, List<String>> responseHeaders;
 
 
     public URI getUrl() {
@@ -31,30 +34,24 @@ public class FakeRequestResponse {
         return httpStatus;
     }
 
-    public Map<String, List<String>> getHeaders() {
-        return headers;
+    public Map<String, List<String>> getRequestHeaders() {
+        return requestHeaders;
     }
 
-    private URI url;
-
-    private HttpMethod requestMethod;
-
-    private String response;
-
-
-
-
+    public Map<String, List<String>> getResponseHeaders() {
+        return responseHeaders;
+    }
 
 
     FakeRequestResponse(URI url,
                         HttpMethod requestMethod,
-                        String response, HttpStatus httpStatus, Map<String, List<String>> headers) {
+                        String response, HttpStatus httpStatus, Map<String, List<String>> requestHeaders, Map<String, List<String>> responseHeaders) {
         this.url = url;
         this.requestMethod = requestMethod;
         this.response = response;
         this.httpStatus = httpStatus;
-        this.headers = headers;
-
+        this.requestHeaders = requestHeaders;
+        this.responseHeaders = responseHeaders;
     }
 
 
