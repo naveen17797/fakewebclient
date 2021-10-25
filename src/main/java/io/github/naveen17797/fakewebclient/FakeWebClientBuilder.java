@@ -11,6 +11,8 @@ public class FakeWebClientBuilder {
 
     private WebClient.Builder builder;
 
+    private String baseUrl;
+
     private List<FakeRequestResponse> requestResponsesList = new ArrayList<>();
 
 
@@ -25,19 +27,27 @@ public class FakeWebClientBuilder {
 
 
     public WebClient build() {
-        return this.builder
+        WebClient.Builder builder = this.builder
                 .clientConnector(
                         new FakeHttpConnector(requestResponsesList)
                 )
-                .exchangeFunction(new FakeExchangeFunction(requestResponsesList))
+                .exchangeFunction(new FakeExchangeFunction(requestResponsesList));
 
+        if (baseUrl != null) {
+            builder.baseUrl(baseUrl);
+        }
 
-                .build();
+        return builder.build();
     }
 
 
     public FakeWebClientBuilder addRequestResponse(FakeRequestResponse fakeRequestResponse) {
         this.requestResponsesList.add(fakeRequestResponse);
+        return this;
+    }
+
+    public FakeWebClientBuilder baseUrl(String baseUrl) {
+        this.baseUrl = baseUrl;
         return this;
     }
 }
