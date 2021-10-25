@@ -4,6 +4,10 @@ import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 
 import java.net.URI;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 public class FakeRequestResponseBuilder {
 
@@ -14,6 +18,8 @@ public class FakeRequestResponseBuilder {
     private String response;
 
     private HttpStatus statusCode;
+
+    private Map<String, List<String>> headers = new HashMap<>();
 
 
     FakeRequestResponseBuilder forUrl(String url) {
@@ -39,7 +45,13 @@ public class FakeRequestResponseBuilder {
 
 
     FakeRequestResponse build() {
-        return new FakeRequestResponse(url, requestMethod, response, statusCode);
+        return new FakeRequestResponse(url, requestMethod, response, statusCode, headers);
     }
 
+    public FakeRequestResponseBuilder withRequestHeader(String key, String value) {
+        ArrayList<String> mutableList = new ArrayList<>();
+        mutableList.add(value);
+        headers.put(key, mutableList);
+        return this;
+    }
 }

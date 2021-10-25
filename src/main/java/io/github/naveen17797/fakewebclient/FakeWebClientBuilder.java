@@ -28,7 +28,11 @@ public class FakeWebClientBuilder {
         return this.builder
                 .clientConnector(
                         new FakeHttpConnector(requestResponsesList)
-                ).build();
+                )
+                .exchangeFunction(new FakeExchangeFunction(requestResponsesList))
+
+
+                .build();
     }
 
 
