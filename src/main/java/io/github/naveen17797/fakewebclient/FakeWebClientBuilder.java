@@ -5,6 +5,7 @@ import org.springframework.web.reactive.function.client.WebClient;
 import java.util.ArrayList;
 import java.util.List;
 
+
 public class FakeWebClientBuilder {
 
 
@@ -18,12 +19,16 @@ public class FakeWebClientBuilder {
     }
 
 
+    static FakeWebClientBuilder useDefaultWebClientBuilder() {
+        return new FakeWebClientBuilder(WebClient.builder());
+    }
+
 
     WebClient build() {
         return this.builder
                 .clientConnector(
-                new FakeHttpConnector( requestResponsesList )
-        ).build();
+                        new FakeHttpConnector(requestResponsesList)
+                ).build();
     }
 
 

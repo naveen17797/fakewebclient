@@ -10,11 +10,10 @@ import java.net.URI;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-@SpringBootTest
+
 class FakewebclientApplicationTests {
 
-    @Autowired
-    private WebClient.Builder builder;
+
 
 
     @Test
@@ -28,7 +27,7 @@ class FakewebclientApplicationTests {
                 .build();
 
         WebClient client =
-                new FakeWebClientBuilder(builder)
+                FakeWebClientBuilder.useDefaultWebClientBuilder()
                         .addRequestResponse(fakeRequestResponse)
                         .build();
 
