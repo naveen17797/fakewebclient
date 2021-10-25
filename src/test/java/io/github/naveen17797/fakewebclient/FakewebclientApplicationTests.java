@@ -4,6 +4,8 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.HttpMethod;
+import org.springframework.http.client.ClientHttpRequest;
+import org.springframework.web.reactive.function.client.ClientRequest;
 import org.springframework.web.reactive.function.client.WebClient;
 
 import java.net.URI;
@@ -44,7 +46,7 @@ class FakewebclientApplicationTests {
                         .build();
 
 
-        assertThrows(RuntimeException.class, () -> {
+        assertThrows(NoMockFoundException.class, () -> {
             client.method(HttpMethod.GET)
                     .uri(URI.create("https://google.com")).exchange().block()
                     .bodyToMono(String.class).block();
@@ -98,7 +100,7 @@ class FakewebclientApplicationTests {
                         .build();
 
 
-        assertThrows(RuntimeException.class, () -> {
+        assertThrows(NoMockFoundException.class, () -> {
             client
                     .method(HttpMethod.GET)
                     .uri(URI.create("https://google.com"))
@@ -160,6 +162,16 @@ class FakewebclientApplicationTests {
                 .uri(uriBuilder -> uriBuilder.path("/foo").build())
                 .exchange().block()
                 .bodyToMono(String.class).block());
+
+    }
+
+    @Test
+    void testShouldSerializeRequestCorrectly() {
+
+        String expectedString = "FakeWebClient : Cant find suitable mocks for Request method : POST\nRequest Url : https://google.com\nRequest Headers : []";
+
+        assertEquals(expectedString, NoMockFoundException.serialize(ClientRequest.create(HttpMethod.POST, URI.create("https://google.com"))
+                .build()));
 
     }
 

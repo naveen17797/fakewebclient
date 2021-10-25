@@ -33,7 +33,8 @@ public class FakeExchangeFunction implements ExchangeFunction {
 
 
         if (filteredItems.size() == 0) {
-            throw new RuntimeException("FakeWebClient : Cant find a appropriate mock response to satisfy this request " + request);
+
+            throw new NoMockFoundException(request);
         }
 
         FakeRequestResponse match = filteredItems.get(0);
