@@ -2,12 +2,12 @@ package io.github.naveen17797.fakewebclient;
 
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.client.reactive.ClientHttpRequest;
+import org.springframework.web.reactive.function.BodyInserter;
+import org.springframework.web.reactive.function.BodyInserters;
 
 import java.net.URI;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class FakeRequestResponseBuilder {
 
@@ -22,6 +22,8 @@ public class FakeRequestResponseBuilder {
     private Map<String, List<String>> requestHeaders = new HashMap<>();
 
     private Map<String, List<String>> responseHeaders = new HashMap<>();
+
+    private Optional<BodyInserter<?, ? super ClientHttpRequest>> requestBody = Optional.empty();
 
 
     public FakeRequestResponseBuilder forUrl(String url) {
@@ -47,7 +49,7 @@ public class FakeRequestResponseBuilder {
 
 
     public FakeRequestResponse build() {
-        return new FakeRequestResponse(url, requestMethod, response, statusCode, requestHeaders, responseHeaders);
+        return new FakeRequestResponse(url, requestMethod, response, statusCode, requestHeaders, responseHeaders, requestBody);
     }
 
     public FakeRequestResponseBuilder withRequestHeader(String key, String value) {
@@ -61,6 +63,12 @@ public class FakeRequestResponseBuilder {
         ArrayList<String> mutableList = new ArrayList<>();
         mutableList.add(value);
         responseHeaders.put(key, mutableList);
+        return this;
+    }
+
+
+    public FakeRequestResponseBuilder withRequestBody(BodyInserter<?, ? super ClientHttpRequest> requestBody) {
+        this.requestBody = Optional.of(requestBody);
         return this;
     }
 }

@@ -5,6 +5,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.client.ClientHttpRequest;
+import org.springframework.web.reactive.function.BodyInserters;
 import org.springframework.web.reactive.function.client.ClientRequest;
 import org.springframework.web.reactive.function.client.WebClient;
 
@@ -162,7 +163,31 @@ class FakewebclientApplicationTests {
                 .uri(uriBuilder -> uriBuilder.path("/foo").build())
                 .exchange().block()
                 .bodyToMono(String.class).block());
+    }
 
+
+    @Test
+    void testShouldBeAbleToCompareByRequestBodyCorrectly() {
+        FakeRequestResponse fakeRequestResponse = new FakeRequestResponseBuilder()
+                .forUrl("https://google.com/foo")
+                .withRequestMethod(HttpMethod.POST)
+                .withRequestBody(BodyInserters.fromFormData("foo", "bar"))
+                .replyWithResponse("test")
+                .replyWithResponseStatusCode(200)
+                .build();
+
+        WebClient client =
+                FakeWebClientBuilder.useDefaultWebClientBuilder()
+                        .baseUrl("https://google.com")
+                        .addRequestResponse(fakeRequestResponse)
+                        .build();
+
+
+        assertEquals("test", client.method(HttpMethod.POST)
+                .uri(uriBuilder -> uriBuilder.path("/foo").build())
+                .body(BodyInserters.fromFormData("foo", "bar"))
+                .exchange().block()
+                .bodyToMono(String.class).block());
     }
 
     @Test
