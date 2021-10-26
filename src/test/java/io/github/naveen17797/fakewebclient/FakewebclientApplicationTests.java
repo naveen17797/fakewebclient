@@ -175,4 +175,23 @@ class FakewebclientApplicationTests {
 
     }
 
+
+    @Test
+    void testShouldThrowExceptionIfNoRequestIsMade() {
+        FakeRequestResponse fakeRequestResponse = new FakeRequestResponseBuilder()
+                .forUrl("https://google.com/foo")
+                .withRequestMethod(HttpMethod.GET)
+                .replyWithResponse("test")
+                .replyWithResponseStatusCode(200)
+                .build();
+
+        WebClient client =
+                FakeWebClientBuilder.useDefaultWebClientBuilder()
+                        .baseUrl("https://google.com")
+                        .addRequestResponse(fakeRequestResponse)
+                        .build();
+
+        assertThrows( ResponseNotDelieverdException.class, client.assertComplete());
+    }
+
 }
