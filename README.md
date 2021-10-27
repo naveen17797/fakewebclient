@@ -43,6 +43,7 @@ Couldnt mock it properly with mockito, unable to find a nice alternative which c
                         .block()
                         .bodyToMono(String.class).block());
 
-        Assertions.assertTrue(fakeWebClientBuilder.assertComplete());
+        // Verify all the responses enqueued are dispatched by webclient.
+        Assertions.assertTrue(fakeWebClientBuilder.assertAllResponsesDispatched());
 
 ```

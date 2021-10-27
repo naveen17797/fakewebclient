@@ -52,7 +52,7 @@ public class FakeWebClientBuilder {
         return this;
     }
 
-    public Boolean assertComplete() {
+    public Boolean assertAllResponsesDispatched() {
         if ( this.requestResponsesList.isEmpty() ) {
             return true;
         }

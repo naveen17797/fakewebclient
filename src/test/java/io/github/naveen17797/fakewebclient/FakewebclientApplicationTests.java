@@ -45,7 +45,7 @@ class FakewebclientApplicationTests {
         assertEquals("test", client.method(HttpMethod.GET).uri(URI.create("https://google.com")).exchange().block()
                 .bodyToMono(String.class).block());
 
-        Assertions.assertTrue(this.fakeWebClientBuilder.assertComplete());
+        Assertions.assertTrue(this.fakeWebClientBuilder.assertAllResponsesDispatched());
 
     }
 
@@ -91,7 +91,7 @@ class FakewebclientApplicationTests {
                         .exchange()
                         .block()
                         .bodyToMono(String.class).block());
-        Assertions.assertTrue(this.fakeWebClientBuilder.assertComplete());
+        Assertions.assertTrue(this.fakeWebClientBuilder.assertAllResponsesDispatched());
     }
 
 
@@ -149,7 +149,7 @@ class FakewebclientApplicationTests {
                         .headers()
                         .header("foo")
                         .get(0));
-        Assertions.assertTrue(this.fakeWebClientBuilder.assertComplete());
+        Assertions.assertTrue(this.fakeWebClientBuilder.assertAllResponsesDispatched());
     }
 
 
@@ -174,7 +174,7 @@ class FakewebclientApplicationTests {
                 .uri(uriBuilder -> uriBuilder.path("/foo").build())
                 .exchange().block()
                 .bodyToMono(String.class).block());
-        Assertions.assertTrue(this.fakeWebClientBuilder.assertComplete());
+        Assertions.assertTrue(this.fakeWebClientBuilder.assertAllResponsesDispatched());
 
     }
 
@@ -204,7 +204,7 @@ class FakewebclientApplicationTests {
                         .addRequestResponse(fakeRequestResponse)
                         .build();
 
-        assertThrows( ResponseNotDelieverdException.class, fakeWebClientBuilder::assertComplete);
+        assertThrows( ResponseNotDelieverdException.class, fakeWebClientBuilder::assertAllResponsesDispatched);
     }
 
 
