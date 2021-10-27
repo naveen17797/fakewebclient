@@ -14,16 +14,16 @@ import java.util.stream.Collectors;
 public class FakeExchangeFunction implements ExchangeFunction {
 
 
-    private final List<FakeRequestResponse> requestResponsesList;
+    private final FakeWebClientBuilder fakeWebClientBuilder;
 
-    public FakeExchangeFunction(List<FakeRequestResponse> requestResponsesList) {
-        this.requestResponsesList = requestResponsesList;
+    public FakeExchangeFunction(FakeWebClientBuilder fakeWebClientBuilder) {
+        this.fakeWebClientBuilder = fakeWebClientBuilder;
     }
 
     @Override
     public Mono<ClientResponse> exchange(ClientRequest request) {
 
-        List<FakeRequestResponse> filteredItems = this.requestResponsesList.stream().filter(item ->
+        List<FakeRequestResponse> filteredItems = this.fakeWebClientBuilder.requestResponsesList.stream().filter(item ->
 
                 Objects.equals(item.getUrl(), request.url()) &&
                         item.getRequestMethod() == request.method() &&
@@ -38,6 +38,9 @@ public class FakeExchangeFunction implements ExchangeFunction {
         }
 
         FakeRequestResponse match = filteredItems.get(0);
+
+        // Remove this item from the builder.
+        this.fakeWebClientBuilder.requestResponsesList.remove(match);
 
 
 
