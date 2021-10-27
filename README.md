@@ -26,9 +26,9 @@ Couldnt mock it properly with mockito, unable to find a nice alternative which c
                 .replyWithResponseStatusCode(200)
                 .build();
 
-
+        FakeWebClientBuilder fakeWebClientBuilder = FakeWebClientBuilder.useDefaultWebClientBuilder();
         WebClient client =
-                FakeWebClientBuilder.useDefaultWebClientBuilder()
+                        fakeWebClientBuilder
                         .addRequestResponse(fakeRequestResponse)
                         .build();
 
@@ -42,5 +42,7 @@ Couldnt mock it properly with mockito, unable to find a nice alternative which c
                         .exchange()
                         .block()
                         .bodyToMono(String.class).block());
+
+        Assertions.assertTrue(fakeWebClientBuilder.assertComplete());
 
 ```
