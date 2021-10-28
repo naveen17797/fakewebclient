@@ -1,8 +1,9 @@
 package io.github.naveen17797.fakewebclient;
 
+import io.github.naveen17797.fakewebclient.exceptions.ResponseNotDelieverdException;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.client.ClientHttpRequest;
 import org.springframework.web.reactive.function.BodyInserters;
@@ -10,6 +11,8 @@ import org.springframework.web.reactive.function.client.ClientRequest;
 import org.springframework.web.reactive.function.client.WebClient;
 
 import java.net.URI;
+import java.util.ArrayList;
+import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -17,6 +20,13 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 
 class FakewebclientApplicationTests {
 
+
+    private FakeWebClientBuilder fakeWebClientBuilder;
+
+    @BeforeEach
+    void beforeEach() {
+        this.fakeWebClientBuilder = FakeWebClientBuilder.useDefaultWebClientBuilder();
+    }
 
     @Test
     void testShouldBeAbleToUseFakeWebClientForAssertions() {
@@ -29,7 +39,7 @@ class FakewebclientApplicationTests {
                 .build();
 
         WebClient client =
-                FakeWebClientBuilder.useDefaultWebClientBuilder()
+                fakeWebClientBuilder
                         .addRequestResponse(fakeRequestResponse)
                         .build();
 
@@ -37,13 +47,15 @@ class FakewebclientApplicationTests {
         assertEquals("test", client.method(HttpMethod.GET).uri(URI.create("https://google.com")).exchange().block()
                 .bodyToMono(String.class).block());
 
+        Assertions.assertTrue(this.fakeWebClientBuilder.assertAllResponsesDispatched());
+
     }
 
 
     @Test
     void testWhenNoMockProvidedShouldThrowException() {
         WebClient client =
-                FakeWebClientBuilder.useDefaultWebClientBuilder()
+                fakeWebClientBuilder
                         .build();
 
 
@@ -67,7 +79,7 @@ class FakewebclientApplicationTests {
 
 
         WebClient client =
-                FakeWebClientBuilder.useDefaultWebClientBuilder()
+                fakeWebClientBuilder
                         .addRequestResponse(fakeRequestResponse)
                         .build();
 
@@ -81,7 +93,7 @@ class FakewebclientApplicationTests {
                         .exchange()
                         .block()
                         .bodyToMono(String.class).block());
-
+        Assertions.assertTrue(this.fakeWebClientBuilder.assertAllResponsesDispatched());
     }
 
 
@@ -96,7 +108,7 @@ class FakewebclientApplicationTests {
                 .build();
 
         WebClient client =
-                FakeWebClientBuilder.useDefaultWebClientBuilder()
+                fakeWebClientBuilder
                         .addRequestResponse(fakeRequestResponse)
                         .build();
 
@@ -124,7 +136,7 @@ class FakewebclientApplicationTests {
                 .build();
 
         WebClient client =
-                FakeWebClientBuilder.useDefaultWebClientBuilder()
+                fakeWebClientBuilder
                         .addRequestResponse(fakeRequestResponse)
                         .build();
 
@@ -139,6 +151,7 @@ class FakewebclientApplicationTests {
                         .headers()
                         .header("foo")
                         .get(0));
+        Assertions.assertTrue(this.fakeWebClientBuilder.assertAllResponsesDispatched());
     }
 
 
@@ -153,7 +166,7 @@ class FakewebclientApplicationTests {
                 .build();
 
         WebClient client =
-                FakeWebClientBuilder.useDefaultWebClientBuilder()
+                fakeWebClientBuilder
                         .baseUrl("https://google.com")
                         .addRequestResponse(fakeRequestResponse)
                         .build();
@@ -163,6 +176,7 @@ class FakewebclientApplicationTests {
                 .uri(uriBuilder -> uriBuilder.path("/foo").build())
                 .exchange().block()
                 .bodyToMono(String.class).block());
+
     }
 
 
@@ -176,6 +190,8 @@ class FakewebclientApplicationTests {
                 .replyWithResponseStatusCode(200)
                 .build();
 
+
+
         WebClient client =
                 FakeWebClientBuilder.useDefaultWebClientBuilder()
                         .baseUrl("https://google.com")
@@ -188,6 +204,8 @@ class FakewebclientApplicationTests {
                 .body(BodyInserters.fromFormData("foo", "bar"))
                 .exchange().block()
                 .bodyToMono(String.class).block());
+
+        Assertions.assertTrue(this.fakeWebClientBuilder.assertAllResponsesDispatched());
     }
 
     @Test
@@ -199,5 +217,49 @@ class FakewebclientApplicationTests {
                 .build()));
 
     }
+
+
+    @Test
+    void testShouldThrowExceptionIfNoRequestIsMade() {
+        FakeRequestResponse fakeRequestResponse = new FakeRequestResponseBuilder()
+                .forUrl("https://google.com/foo")
+                .withRequestMethod(HttpMethod.GET)
+                .replyWithResponse("test")
+                .replyWithResponseStatusCode(200)
+                .build();
+
+        WebClient client =
+                fakeWebClientBuilder
+                        .baseUrl("https://google.com")
+                        .addRequestResponse(fakeRequestResponse)
+                        .build();
+
+        assertThrows( ResponseNotDelieverdException.class, fakeWebClientBuilder::assertAllResponsesDispatched);
+    }
+
+
+    @Test
+    void testExceptionShouldPrintCorrectErrorMessages() {
+
+        FakeRequestResponse response = new FakeRequestResponseBuilder()
+                .forUrl("https://google.com/foo")
+                .withRequestMethod(HttpMethod.GET)
+                .replyWithResponse("test")
+                .replyWithResponseStatusCode(200)
+                .build();
+
+        Exception e = new ResponseNotDelieverdException(new ArrayList<>(List.of(response)));
+
+        assertEquals("The following responses are not matched by fakewebclient\n" +
+                "\n" +
+                "Url: https://google.com/foo\n" +
+                "Method: GET\n" +
+                "Request Status Code: 200\n" +
+                "Request Headers: {}\n" +
+                "Response Headers: {}\n", e.getMessage());
+
+    }
+
+
 
 }

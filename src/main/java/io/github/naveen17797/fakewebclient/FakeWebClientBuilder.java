@@ -1,5 +1,6 @@
 package io.github.naveen17797.fakewebclient;
 
+import io.github.naveen17797.fakewebclient.exceptions.ResponseNotDelieverdException;
 import org.springframework.web.reactive.function.client.WebClient;
 
 import java.util.ArrayList;
@@ -13,7 +14,7 @@ public class FakeWebClientBuilder {
 
     private String baseUrl;
 
-    private List<FakeRequestResponse> requestResponsesList = new ArrayList<>();
+    public List<FakeRequestResponse> requestResponsesList = new ArrayList<>();
 
 
     FakeWebClientBuilder(WebClient.Builder builder) {
@@ -31,7 +32,7 @@ public class FakeWebClientBuilder {
                 .clientConnector(
                         new FakeHttpConnector(requestResponsesList)
                 )
-                .exchangeFunction(new FakeExchangeFunction(requestResponsesList));
+                .exchangeFunction(new FakeExchangeFunction(this));
 
         if (baseUrl != null) {
             builder.baseUrl(baseUrl);
@@ -49,5 +50,12 @@ public class FakeWebClientBuilder {
     public FakeWebClientBuilder baseUrl(String baseUrl) {
         this.baseUrl = baseUrl;
         return this;
+    }
+
+    public Boolean assertAllResponsesDispatched() {
+        if ( this.requestResponsesList.isEmpty() ) {
+            return true;
+        }
+        throw new ResponseNotDelieverdException(requestResponsesList);
     }
 }
