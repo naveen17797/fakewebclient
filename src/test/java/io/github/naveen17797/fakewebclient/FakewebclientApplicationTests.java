@@ -272,6 +272,7 @@ class FakewebclientApplicationTests {
         FakeRequestResponse response = new FakeRequestResponseBuilder()
                 .withRequestUrl("https://google.com/foo")
                 .withRequestMethod(HttpMethod.GET)
+                .withRequestBody(BodyInserters.fromFormData("foo", "bar"))
                 .replyWithResponse("test")
                 .replyWithResponseStatusCode(200)
                 .build();
@@ -284,6 +285,7 @@ class FakewebclientApplicationTests {
                 "Method: GET\n" +
                 "Request Status Code: 200\n" +
                 "Request Headers: {}\n" +
+                "Request Body: foo=bar\n" +
                 "Response Headers: {}\n", e.getMessage());
 
     }
