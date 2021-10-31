@@ -18,32 +18,31 @@ Couldnt mock it properly with mockito, unable to find a nice alternative which c
 ### Sample Usage
 
 ```java
+
+FakeWebClientBuilder fakeWebClientBuilder = FakeWebClientBuilder.useDefaultWebClientBuilder();
+
         FakeRequestResponse fakeRequestResponse = new FakeRequestResponseBuilder()
-                .forUrl("https://google.com")
-                .withRequestMethod(HttpMethod.GET)
-                .withRequestHeader("foo", "bar")
-                .replyWithResponse("test")
-                .replyWithResponseStatusCode(200)
-                .build();
+        .withRequestUrl("https://google.com/foo")
+        .withRequestMethod(HttpMethod.POST)
+        .withRequestBody(BodyInserters.fromFormData("foo", "bar"))
+        .replyWithResponse("test")
+        .replyWithResponseStatusCode(200)
+        .build();
 
-        FakeWebClientBuilder fakeWebClientBuilder = FakeWebClientBuilder.useDefaultWebClientBuilder();
+
+
         WebClient client =
-                        fakeWebClientBuilder
-                        .addRequestResponse(fakeRequestResponse)
-                        .build();
+        FakeWebClientBuilder.useDefaultWebClientBuilder()
+        .baseUrl("https://google.com")
+        .addRequestResponse(fakeRequestResponse)
+        .build();
 
 
-        assertEquals("test",
+        assertEquals("test", client.method(HttpMethod.POST)
+        .uri(uriBuilder -> uriBuilder.path("/foo").build())
+        .body(BodyInserters.fromFormData("foo", "bar"))
+        .exchange().block()
+        .bodyToMono(String.class).block());
 
-                client
-                        .method(HttpMethod.GET)
-                        .uri(URI.create("https://google.com"))
-                        .header("foo", "bar")
-                        .exchange()
-                        .block()
-                        .bodyToMono(String.class).block());
-
-        // Verify all the responses enqueued are dispatched by webclient.
         Assertions.assertTrue(fakeWebClientBuilder.assertAllResponsesDispatched());
-
 ```
