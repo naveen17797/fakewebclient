@@ -4,6 +4,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.client.reactive.ClientHttpRequest;
 import org.springframework.web.reactive.function.BodyExtractors;
 import org.springframework.web.reactive.function.BodyInserter;
+import org.springframework.web.reactive.function.BodyInserters;
 import org.springframework.web.reactive.function.client.ClientRequest;
 import org.springframework.web.reactive.function.client.ClientResponse;
 import org.springframework.web.reactive.function.client.ExchangeFunction;
@@ -32,7 +33,7 @@ public class FakeExchangeFunction implements ExchangeFunction {
                 Objects.equals(item.getUrl(), request.url()) &&
                         item.getRequestMethod() == request.method() &&
                         headerCompare(item.getRequestHeaders(), request.headers()) &&
-                        compareByRequestBody(item.getRequestBody(), request.body())
+                        compareByRequestBody(item, item.getRequestBody(), request.body())
 
         ).collect(Collectors.toList());
 
@@ -56,6 +57,11 @@ public class FakeExchangeFunction implements ExchangeFunction {
                     }
                 })
                 .build());
+    }
+
+    private boolean compareByRequestBody(FakeRequestResponse fakeRequestResponse, Optional<BodyInserter<?, ? super ClientHttpRequest>> requestBody, BodyInserter<?, ? super ClientHttpRequest> body) {
+        RequestBodyComparator comparator = new RequestBodyComparator();
+        return comparator.compare(fakeRequestResponse, requestBody, body);
     }
 
     private boolean headerCompare(Map<String, List<String>> itemHeader, HttpHeaders requestHeader) {
