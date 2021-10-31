@@ -5,7 +5,6 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.HttpMethod;
-import org.springframework.http.client.ClientHttpRequest;
 import org.springframework.web.reactive.function.BodyInserters;
 import org.springframework.web.reactive.function.client.ClientRequest;
 import org.springframework.web.reactive.function.client.WebClient;
@@ -32,7 +31,7 @@ class FakewebclientApplicationTests {
     void testShouldBeAbleToUseFakeWebClientForAssertions() {
 
         FakeRequestResponse fakeRequestResponse = new FakeRequestResponseBuilder()
-                .forUrl("https://google.com")
+                .withRequestUrl("https://google.com")
                 .withRequestMethod(HttpMethod.GET)
                 .replyWithResponse("test")
                 .replyWithResponseStatusCode(200)
@@ -70,7 +69,7 @@ class FakewebclientApplicationTests {
     @Test
     void testShouldBeAbleToCompareByHeaders() {
         FakeRequestResponse fakeRequestResponse = new FakeRequestResponseBuilder()
-                .forUrl("https://google.com")
+                .withRequestUrl("https://google.com")
                 .withRequestMethod(HttpMethod.GET)
                 .withRequestHeader("foo", "bar")
                 .replyWithResponse("test")
@@ -100,7 +99,7 @@ class FakewebclientApplicationTests {
     @Test
     void testWhenHeaderNotMatchShouldThrowException() {
         FakeRequestResponse fakeRequestResponse = new FakeRequestResponseBuilder()
-                .forUrl("https://google.com")
+                .withRequestUrl("https://google.com")
                 .withRequestMethod(HttpMethod.GET)
                 .withRequestHeader("foo", "bar")
                 .replyWithResponse("test")
@@ -128,7 +127,7 @@ class FakewebclientApplicationTests {
     void testShouldBeAbleToMockResponseHeader() {
 
         FakeRequestResponse fakeRequestResponse = new FakeRequestResponseBuilder()
-                .forUrl("https://google.com")
+                .withRequestUrl("https://google.com")
                 .withRequestMethod(HttpMethod.GET)
                 .replyWithResponse("test")
                 .replyWithResponseStatusCode(200)
@@ -159,7 +158,7 @@ class FakewebclientApplicationTests {
     void testShouldBeAbleToBaseUrlParameter() {
 
         FakeRequestResponse fakeRequestResponse = new FakeRequestResponseBuilder()
-                .forUrl("https://google.com/foo")
+                .withRequestUrl("https://google.com/foo")
                 .withRequestMethod(HttpMethod.GET)
                 .replyWithResponse("test")
                 .replyWithResponseStatusCode(200)
@@ -183,7 +182,7 @@ class FakewebclientApplicationTests {
     @Test
     void testShouldBeAbleToCompareByRequestBodyCorrectly() {
         FakeRequestResponse fakeRequestResponse = new FakeRequestResponseBuilder()
-                .forUrl("https://google.com/foo")
+                .withRequestUrl("https://google.com/foo")
                 .withRequestMethod(HttpMethod.POST)
                 .withRequestBody(BodyInserters.fromFormData("foo", "bar"))
                 .replyWithResponse("test")
@@ -211,7 +210,7 @@ class FakewebclientApplicationTests {
     @Test
     void testShouldBeAbleToCompareByRequestBodyJsonCorrectly() {
         FakeRequestResponse fakeRequestResponse = new FakeRequestResponseBuilder()
-                .forUrl("https://google.com/foo")
+                .withRequestUrl("https://google.com/foo")
                 .withRequestMethod(HttpMethod.POST)
                 .withRequestBody(BodyInserters.fromValue(new MockJsonBody("f1", "f2")))
                 .replyWithResponse("test")
@@ -251,7 +250,7 @@ class FakewebclientApplicationTests {
     @Test
     void testShouldThrowExceptionIfNoRequestIsMade() {
         FakeRequestResponse fakeRequestResponse = new FakeRequestResponseBuilder()
-                .forUrl("https://google.com/foo")
+                .withRequestUrl("https://google.com/foo")
                 .withRequestMethod(HttpMethod.GET)
                 .replyWithResponse("test")
                 .replyWithResponseStatusCode(200)
@@ -271,7 +270,7 @@ class FakewebclientApplicationTests {
     void testExceptionShouldPrintCorrectErrorMessages() {
 
         FakeRequestResponse response = new FakeRequestResponseBuilder()
-                .forUrl("https://google.com/foo")
+                .withRequestUrl("https://google.com/foo")
                 .withRequestMethod(HttpMethod.GET)
                 .replyWithResponse("test")
                 .replyWithResponseStatusCode(200)

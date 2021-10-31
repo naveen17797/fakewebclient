@@ -26,7 +26,7 @@ public class FakeRequestResponseBuilder {
     private Optional<BodyInserter<?, ? super ClientHttpRequest>> requestBody = Optional.empty();
 
 
-    public FakeRequestResponseBuilder forUrl(String url) {
+    public FakeRequestResponseBuilder withRequestUrl(String url) {
         this.url = URI.create(url);
         return this;
     }

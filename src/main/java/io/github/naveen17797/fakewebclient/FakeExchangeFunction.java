@@ -61,9 +61,9 @@ public class FakeExchangeFunction implements ExchangeFunction {
                 .build());
     }
 
-    private boolean compareByRequestBody(FakeRequestResponse fakeRequestResponse, Optional<BodyInserter<?, ? super ClientHttpRequest>> requestBody, BodyInserter<?, ? super ClientHttpRequest> body) {
+    private boolean compareByRequestBody(FakeRequestResponse expectedRequest, Optional<BodyInserter<?, ? super ClientHttpRequest>> expectedRequestBody, BodyInserter<?, ? super ClientHttpRequest> body) {
 
-        return this.requestBodyComparator.compare(fakeRequestResponse, requestBody, body);
+        return this.requestBodyComparator.compare(expectedRequest, expectedRequestBody, body);
     }
 
     private boolean headerCompare(Map<String, List<String>> itemHeader, HttpHeaders requestHeader) {
