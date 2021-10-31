@@ -32,7 +32,7 @@ public class FakeWebClientBuilder {
                 .clientConnector(
                         new FakeHttpConnector(requestResponsesList)
                 )
-                .exchangeFunction(new FakeExchangeFunction(this));
+                .exchangeFunction(new FakeExchangeFunction(this, new RequestBodyComparator()));
 
         if (baseUrl != null) {
             builder.baseUrl(baseUrl);
@@ -53,7 +53,7 @@ public class FakeWebClientBuilder {
     }
 
     public Boolean assertAllResponsesDispatched() {
-        if ( this.requestResponsesList.isEmpty() ) {
+        if (this.requestResponsesList.isEmpty()) {
             return true;
         }
         throw new ResponseNotDelieverdException(requestResponsesList);

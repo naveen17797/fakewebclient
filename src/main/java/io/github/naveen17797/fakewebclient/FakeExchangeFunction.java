@@ -20,9 +20,11 @@ public class FakeExchangeFunction implements ExchangeFunction {
 
 
     private final FakeWebClientBuilder fakeWebClientBuilder;
+    private final RequestBodyComparator requestBodyComparator;
 
-    public FakeExchangeFunction(FakeWebClientBuilder fakeWebClientBuilder) {
+    public FakeExchangeFunction(FakeWebClientBuilder fakeWebClientBuilder, RequestBodyComparator requestBodyComparator) {
         this.fakeWebClientBuilder = fakeWebClientBuilder;
+        this.requestBodyComparator = requestBodyComparator;
     }
 
     @Override
@@ -60,8 +62,8 @@ public class FakeExchangeFunction implements ExchangeFunction {
     }
 
     private boolean compareByRequestBody(FakeRequestResponse fakeRequestResponse, Optional<BodyInserter<?, ? super ClientHttpRequest>> requestBody, BodyInserter<?, ? super ClientHttpRequest> body) {
-        RequestBodyComparator comparator = new RequestBodyComparator();
-        return comparator.compare(fakeRequestResponse, requestBody, body);
+
+        return this.requestBodyComparator.compare(fakeRequestResponse, requestBody, body);
     }
 
     private boolean headerCompare(Map<String, List<String>> itemHeader, HttpHeaders requestHeader) {

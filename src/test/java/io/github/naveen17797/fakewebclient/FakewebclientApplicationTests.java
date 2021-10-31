@@ -209,6 +209,35 @@ class FakewebclientApplicationTests {
     }
 
     @Test
+    void testShouldBeAbleToCompareByRequestBodyJsonCorrectly() {
+        FakeRequestResponse fakeRequestResponse = new FakeRequestResponseBuilder()
+                .forUrl("https://google.com/foo")
+                .withRequestMethod(HttpMethod.POST)
+                .withRequestBody(BodyInserters.fromValue(new MockJsonBody("f1", "f2")))
+                .replyWithResponse("test")
+                .replyWithResponseStatusCode(200)
+                .build();
+
+
+
+        WebClient client =
+                FakeWebClientBuilder.useDefaultWebClientBuilder()
+                        .baseUrl("https://google.com")
+                        .addRequestResponse(fakeRequestResponse)
+                        .build();
+
+
+        assertEquals("test", client.method(HttpMethod.POST)
+                .uri(uriBuilder -> uriBuilder.path("/foo").build())
+                .body(BodyInserters.fromValue(new MockJsonBody("f1", "f2")))
+                .exchange().block()
+                .bodyToMono(String.class).block());
+
+        Assertions.assertTrue(this.fakeWebClientBuilder.assertAllResponsesDispatched());
+    }
+
+
+    @Test
     void testShouldSerializeRequestCorrectly() {
 
         String expectedString = "FakeWebClient : Cant find suitable mocks for Request method : POST\nRequest Url : https://google.com\nRequest Headers : []";
