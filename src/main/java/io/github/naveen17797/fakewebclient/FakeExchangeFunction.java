@@ -1,6 +1,10 @@
 package io.github.naveen17797.fakewebclient;
 
 import org.springframework.http.HttpHeaders;
+import org.springframework.http.client.reactive.ClientHttpRequest;
+import org.springframework.web.reactive.function.BodyExtractors;
+import org.springframework.web.reactive.function.BodyInserter;
+import org.springframework.web.reactive.function.BodyInserters;
 import org.springframework.web.reactive.function.client.ClientRequest;
 import org.springframework.web.reactive.function.client.ClientResponse;
 import org.springframework.web.reactive.function.client.ExchangeFunction;
@@ -9,15 +13,18 @@ import reactor.core.publisher.Mono;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 public class FakeExchangeFunction implements ExchangeFunction {
 
 
     private final FakeWebClientBuilder fakeWebClientBuilder;
+    private final RequestBodyComparator requestBodyComparator;
 
-    public FakeExchangeFunction(FakeWebClientBuilder fakeWebClientBuilder) {
+    public FakeExchangeFunction(FakeWebClientBuilder fakeWebClientBuilder, RequestBodyComparator requestBodyComparator) {
         this.fakeWebClientBuilder = fakeWebClientBuilder;
+        this.requestBodyComparator = requestBodyComparator;
     }
 
     @Override
@@ -27,7 +34,8 @@ public class FakeExchangeFunction implements ExchangeFunction {
 
                 Objects.equals(item.getUrl(), request.url()) &&
                         item.getRequestMethod() == request.method() &&
-                        headerCompare( item.getRequestHeaders(), request.headers() )
+                        headerCompare(item.getRequestHeaders(), request.headers()) &&
+                        compareByRequestBody(item, item.getRequestBody(), request.body())
 
         ).collect(Collectors.toList());
 
@@ -43,16 +51,19 @@ public class FakeExchangeFunction implements ExchangeFunction {
         this.fakeWebClientBuilder.requestResponsesList.remove(match);
 
 
-
-
         return Mono.just(ClientResponse.create(match.getHttpStatus())
                 .body(match.getResponse())
-                        .headers((responseHeaders) -> {
-                            for (Map.Entry<String, List<String>> entry: match.getResponseHeaders().entrySet()) {
-                                responseHeaders.addAll(entry.getKey(), entry.getValue());
-                            }
-                        })
+                .headers((responseHeaders) -> {
+                    for (Map.Entry<String, List<String>> entry : match.getResponseHeaders().entrySet()) {
+                        responseHeaders.addAll(entry.getKey(), entry.getValue());
+                    }
+                })
                 .build());
+    }
+
+    private boolean compareByRequestBody(FakeRequestResponse expectedRequest, Optional<BodyInserter<?, ? super ClientHttpRequest>> expectedRequestBody, BodyInserter<?, ? super ClientHttpRequest> body) {
+
+        return this.requestBodyComparator.compare(expectedRequest, expectedRequestBody, body);
     }
 
     private boolean headerCompare(Map<String, List<String>> itemHeader, HttpHeaders requestHeader) {
