@@ -1,6 +1,7 @@
 package io.github.naveen17797.fakewebclient;
 
 import io.github.naveen17797.fakewebclient.exceptions.ResponseNotDelieverdException;
+import io.github.naveen17797.fakewebclient.exchangefunction.ExchangeFunctionFactory;
 import org.springframework.web.reactive.function.client.WebClient;
 
 import java.util.ArrayList;
@@ -32,7 +33,7 @@ public class FakeWebClientBuilder {
                 .clientConnector(
                         new FakeHttpConnector(requestResponsesList)
                 )
-                .exchangeFunction(new FakeExchangeFunction(this, new RequestBodyComparator()));
+                .exchangeFunction(ExchangeFunctionFactory.getInstance(this));
 
         if (baseUrl != null) {
             builder.baseUrl(baseUrl);
