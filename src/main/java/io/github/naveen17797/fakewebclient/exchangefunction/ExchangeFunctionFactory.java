@@ -12,7 +12,7 @@ public class ExchangeFunctionFactory {
     public static ExchangeFunction getInstance(FakeWebClientBuilder builder) {
         RequestBodySerializer serializer = RequestBodySerializerFactory.getInstance();
         RequestBodyComparator comparator = new RequestBodyComparator(serializer);
-        return new FakeExchangeFunction(builder, comparator);
+        return new FakeExchangeFunction(builder, comparator, RequestBodySerializerFactory.getInstance());
     }
 
 }

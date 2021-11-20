@@ -1,5 +1,6 @@
 package io.github.naveen17797.fakewebclient;
 
+import io.github.naveen17797.fakewebclient.serializer.RequestBodySerializer;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.client.reactive.ClientHttpRequest;
 import org.springframework.web.reactive.function.BodyExtractors;
@@ -21,10 +22,12 @@ public class FakeExchangeFunction implements ExchangeFunction {
 
     private final FakeWebClientBuilder fakeWebClientBuilder;
     private final RequestBodyComparator requestBodyComparator;
+    private final RequestBodySerializer requestBodySerializer;
 
-    public FakeExchangeFunction(FakeWebClientBuilder fakeWebClientBuilder, RequestBodyComparator requestBodyComparator) {
+    public FakeExchangeFunction(FakeWebClientBuilder fakeWebClientBuilder, RequestBodyComparator requestBodyComparator, RequestBodySerializer requestBodySerializer) {
         this.fakeWebClientBuilder = fakeWebClientBuilder;
         this.requestBodyComparator = requestBodyComparator;
+        this.requestBodySerializer = requestBodySerializer;
     }
 
     @Override
@@ -42,7 +45,7 @@ public class FakeExchangeFunction implements ExchangeFunction {
 
         if (filteredItems.size() == 0) {
 
-            throw new NoMockFoundException(request);
+            throw new NoMockFoundException(requestBodySerializer, request, this.fakeWebClientBuilder.requestResponsesList);
         }
 
         FakeRequestResponse match = filteredItems.get(0);

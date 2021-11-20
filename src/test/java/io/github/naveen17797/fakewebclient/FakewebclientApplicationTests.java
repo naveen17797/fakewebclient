@@ -1,6 +1,8 @@
 package io.github.naveen17797.fakewebclient;
 
 import io.github.naveen17797.fakewebclient.exceptions.ResponseNotDelieverdException;
+import io.github.naveen17797.fakewebclient.serializer.RequestBodySerializer;
+import io.github.naveen17797.fakewebclient.serializer.RequestBodySerializerFactory;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -12,7 +14,9 @@ import org.springframework.web.reactive.function.client.WebClient;
 import java.net.URI;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
+import static io.github.naveen17797.fakewebclient.NoMockFoundException.serializeMockRequest;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
@@ -239,10 +243,33 @@ class FakewebclientApplicationTests {
     @Test
     void testShouldSerializeRequestCorrectly() {
 
-        String expectedString = "FakeWebClient : Cant find suitable mocks for Request method : POST\nRequest Url : https://google.com\nRequest Headers : []";
+        List<FakeRequestResponse> mockRequests = List.of(
+                new FakeRequestResponseBuilder()
+                        .withRequestUrl("https://test.com")
+                        .withRequestMethod(HttpMethod.GET)
+                        .build(),
+                new FakeRequestResponseBuilder()
+                        .withRequestUrl("https://foo.com")
+                        .withRequestMethod(HttpMethod.GET)
+                        .build()
+        );
+        RequestBodySerializer serializer = RequestBodySerializerFactory.getInstance();
+        String expectedString = "FakeWebClient : Cant find suitable mocks for the request\n" +
+                "Request Method : POST\n" +
+                "Request Url : https://google.com\n" +
+                "Request Headers : []\n" +
+                "Request Body: foo=bar\n\n" +
+                "=== Enqueued Mock Requests ===\n" +
+                mockRequests.stream().map(r -> serializeMockRequest(serializer, r))
+                        .collect(Collectors.joining("\n\n"));
 
-        assertEquals(expectedString, NoMockFoundException.serialize(ClientRequest.create(HttpMethod.POST, URI.create("https://google.com"))
-                .build()));
+
+
+        assertEquals(expectedString, NoMockFoundException.serialize(
+                serializer,
+                ClientRequest.create(HttpMethod.POST, URI.create("https://google.com"))
+                        .body(BodyInserters.fromFormData("foo", "bar"))
+                .build(), mockRequests));
 
     }
 
