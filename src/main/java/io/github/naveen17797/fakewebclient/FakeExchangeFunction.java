@@ -37,7 +37,7 @@ public class FakeExchangeFunction implements ExchangeFunction {
 
                 Objects.equals(item.getUrl(), request.url()) &&
                         item.getRequestMethod() == request.method() &&
-                        headerCompare(item.getRequestHeaders(), request.headers()) &&
+                        headerCompare(item.getRequestHeaders(), request.headers(), item.shouldIgnoreHeaderComparsion()) &&
                         compareByRequestBody(item, item.getRequestBody(), request.body())
 
         ).collect(Collectors.toList());
@@ -69,7 +69,10 @@ public class FakeExchangeFunction implements ExchangeFunction {
         return this.requestBodyComparator.compare(expectedRequest, expectedRequestBody, body);
     }
 
-    private boolean headerCompare(Map<String, List<String>> itemHeader, HttpHeaders requestHeader) {
+    private boolean headerCompare(Map<String, List<String>> itemHeader, HttpHeaders requestHeader, Boolean ignoreHeaders) {
+        if ( ignoreHeaders ) {
+            return true;
+        }
         return itemHeader.entrySet().equals(requestHeader.entrySet());
     }
 }

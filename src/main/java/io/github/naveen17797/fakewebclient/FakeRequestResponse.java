@@ -13,6 +13,7 @@ import java.util.Optional;
 public class FakeRequestResponse {
 
     private final Optional<BodyInserter<?, ? super ClientHttpRequest>> requestBody;
+    private final Boolean ignoreHeaders;
 
     private URI url;
     private HttpMethod requestMethod;
@@ -52,9 +53,12 @@ public class FakeRequestResponse {
     }
 
 
+
+
     public FakeRequestResponse(URI url,
                                HttpMethod requestMethod,
-                               String response, HttpStatus httpStatus, Map<String, List<String>> requestHeaders, Map<String, List<String>> responseHeaders, Optional<BodyInserter<?, ? super ClientHttpRequest>> requestBody) {
+                               String response, HttpStatus httpStatus, Map<String, List<String>> requestHeaders, Map<String, List<String>> responseHeaders, Optional<BodyInserter<?, ? super ClientHttpRequest>> requestBody,
+                               Boolean ignoreHeaders) {
         this.url = url;
         this.requestMethod = requestMethod;
         this.response = response;
@@ -62,6 +66,11 @@ public class FakeRequestResponse {
         this.requestHeaders = requestHeaders;
         this.responseHeaders = responseHeaders;
         this.requestBody = requestBody;
+        this.ignoreHeaders = ignoreHeaders;
+    }
+
+    public Boolean shouldIgnoreHeaderComparsion() {
+        return this.ignoreHeaders;
     }
 
 

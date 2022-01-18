@@ -25,6 +25,13 @@ public class FakeRequestResponseBuilder {
 
     private Optional<BodyInserter<?, ? super ClientHttpRequest>> requestBody = Optional.empty();
 
+    // Ignore headers comparsion.
+    public void setIgnoreHeaders(Boolean ignoreHeaders) {
+        this.ignoreHeaders = ignoreHeaders;
+    }
+
+    private Boolean ignoreHeaders = false;
+
 
     public FakeRequestResponseBuilder withRequestUrl(String url) {
         this.url = URI.create(url);
@@ -49,7 +56,8 @@ public class FakeRequestResponseBuilder {
 
 
     public FakeRequestResponse build() {
-        return new FakeRequestResponse(url, requestMethod, response, statusCode, requestHeaders, responseHeaders, requestBody);
+        return new FakeRequestResponse(url, requestMethod, response, statusCode, requestHeaders, responseHeaders, requestBody
+        , ignoreHeaders);
     }
 
     public FakeRequestResponseBuilder withRequestHeader(String key, String value) {
