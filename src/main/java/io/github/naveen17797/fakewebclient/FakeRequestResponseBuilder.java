@@ -25,12 +25,13 @@ public class FakeRequestResponseBuilder {
 
     private Optional<BodyInserter<?, ? super ClientHttpRequest>> requestBody = Optional.empty();
 
-    // Ignore headers comparsion.
-    public void setIgnoreHeaders(Boolean ignoreHeaders) {
-        this.ignoreHeaders = ignoreHeaders;
-    }
-
     private Boolean ignoreHeaders = false;
+
+    // Ignore headers comparsion.
+    public FakeRequestResponseBuilder withIgnoreHeaders(Boolean ignoreHeaders) {
+        this.ignoreHeaders = ignoreHeaders;
+        return this;
+    }
 
 
     public FakeRequestResponseBuilder withRequestUrl(String url) {
